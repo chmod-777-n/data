@@ -13,8 +13,8 @@ int main(void) {
         b = a%b;
         a = temp;
     }
-    int gcd = a;
-    int lcm = (orig_a * orig_b)/gcd;
+    int nod = a;
+    int lcm = (orig_a * orig_b)/nod;
     printf("HOK(%d, %d) = %d\n", orig_a, orig_b, lcm);
     return 0;
 }
