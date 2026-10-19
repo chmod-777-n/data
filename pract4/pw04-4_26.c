@@ -5,8 +5,8 @@ int main(void) {
     printf("Введите два числа для поиска: ");
     scanf("%d %d", &a, &b);
 
-    int original_a = a;
-    int original_b;
+    int orig_a = a;
+    int orig_b = b;
 
     while (b!=0){
         int temp = b;
@@ -14,7 +14,7 @@ int main(void) {
         a = temp;
     }
     int gcd = a;
-    int lcm = (original_a * original_b)/gcd;
-    printf("HOK(%d, %d) = %d\n", original_a, original_b, lcm);
+    int lcm = (orig_a * orig_b)/gcd;
+    printf("HOK(%d, %d) = %d\n", orig_a, orig_b, lcm);
     return 0;
 }
