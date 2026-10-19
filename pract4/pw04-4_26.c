@@ -14,7 +14,7 @@ int main(void) {
         a = temp;
     }
     int nod = a;
-    int lcm = (orig_a * orig_b)/nod;
-    printf("HOK(%d, %d) = %d\n", orig_a, orig_b, lcm);
+    int nok = (orig_a * orig_b)/nod;
+    printf("HOK(%d, %d) = %d\n", orig_a, orig_b, nok);
     return 0;
 }
