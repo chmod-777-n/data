@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <ctype.h>
+
+int main() {
+    int ch;
+    int count_multiple_11 = 0; // Счетчик символов, кратных 11
+    int total_chars = 0;       // Общий счетчик обработанных символов
+
+    // Считываем символы до конца файла (EOF)
+    while ((ch = getchar()) != EOF) {
+        total_chars++; // Увеличиваем общий счетчик
+
+        // Проверяем, кратен ли ASCII-код числу 11
+        if (ch % 11 == 0) {
+            count_multiple_11++;
+        }
+    }
+
+    // Выводим статистику
+    printf("\n--- Статистика ---\n");
+    printf("Количество символов, чей ASCII-код кратен 11: %d\n", count_multiple_11);
+    printf("Общее количество обработанных символов: %d\n", total_chars);
+
+    return 0;
+}
