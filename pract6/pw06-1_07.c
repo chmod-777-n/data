@@ -6,7 +6,7 @@ int main(void) {
     int word_count=0;
     int in_word=0;
     printf("Введите текст (# для завершения):\n");
-    while ((ch = getchar())!='#') {
+    while ((ch = getchar())!='#' && ch != EOF) {
         if (!isspace(ch)) {
             if (in_word == 0) {
                 word_count++;
