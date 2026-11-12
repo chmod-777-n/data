@@ -3,9 +3,10 @@
 
 int main(void) {
     int choice;
+    int ch;
     double num, result;
 
-    while (1) {
+    while ((ch = getchar())!=EOF && ch != '#') {
         printf("\n Калькулятор степеней \n");
         printf("1. Квадрат числа\n");
         printf("2. Куб числа\n");
