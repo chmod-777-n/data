@@ -5,7 +5,7 @@ int main(void) {
     int sum_in = 0, sum_out = 0;
     printf("Введите числа (0 для завершения):\n");
     scanf("%d", &num);
-    while (num !=0) {
+    while (scanf("%d", &num) == 1 && num!=0) {
         if (num >=10 && num <=50) {
             count_in++;
             sum_in+= num;
