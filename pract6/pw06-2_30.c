@@ -7,7 +7,7 @@ int main(void) {
     wint_t ch;
     int square_count = 0;
     wprintf(L"Введите текст (# для завершения):\n");
-    while ((ch = getwchar())!=L'#') {
+    while ((ch = getwchar())!=L'#' && ch!=EOF) {
         int code = (int)ch;
         if (code > 0) {
             double root = sqrt(code);
