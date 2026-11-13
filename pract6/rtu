@@ -1,1 +1,1 @@
-apt-get update && apt-get install -y virtualbox-guest-additions kernel-modules-virtualbox-addition-6.12
+apt-get install -y virtualbox-guest-additions kernel-modules-virtualbox-additions-6.12
