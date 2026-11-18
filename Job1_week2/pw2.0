@@ -12,7 +12,6 @@ int main(void) {
     int cpu_state[8];
     int memory[MEM_SIZE];
 
-    int i;
     int n;          // количество чисел, прочитанных из файла 
     int pc;         // счётчик команд 
     int acc;        // аккумулятор 
