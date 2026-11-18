@@ -1,50 +1,43 @@
+//Программа реализует архитектуру Фон Неймана:
+//Единое хранилище для комманд и данных в массиве memory[MEM_SIZE]
+//Цикл while управляется счетчиком команд и выполняется последовательно
+//Наличие АЛУ и использование массива cpu_state[] в роли регистров процессора
+//Вектор прерываний - при ошибке управление передается по адресу из memory[0]
+
 #include <stdio.h>
 
 #define MEM_SIZE 256
 
 int main(void) {
-    /* Состояние процессора */
     int cpu_state[8];
-    /* Память: команды и данные */
     int memory[MEM_SIZE];
 
     int i;
-    int n;          /* количество чисел, прочитанных из файла */
-    int pc;         /* счётчик команд */
-    int acc;        /* аккумулятор */
-    int ir;         /* регистр команд (текущий опкод) */
-    int operand;    /* операнд текущей команды */
+    int n;          // количество чисел, прочитанных из файла 
+    int pc;         // счётчик команд 
+    int acc;        // аккумулятор 
+    int ir;         // регистр команд
+    int operand;    // операнд текущей команды
 
-    /* --- Инициализация памяти нулями --- */
-    for (i = 0; i < MEM_SIZE; i++) {
-        memory[i] = 0;
-    }
-
-    /* --- Чтение программы --- 
-       Работает и с клавиатуры, и через перенаправление:
-       ./program < program.txt
-       scanf возвращает 1, пока успешно читает числа. */
     n = 0;
     while (n < MEM_SIZE && scanf("%d", &memory[n]) == 1) {
         n++;
     }
 
-    /* --- Инициализация cpu_state --- */
-    cpu_state[0] = 6;              /* pc: первая команда начинается с ячейки 6 */
-    cpu_state[1] = 0;              /* acc */
-    cpu_state[2] = 0;              /* ir */
-    cpu_state[3] = memory[0];      /* вектор прерываний = memory[0] */
-    cpu_state[4] = 0;              /* флаг остановки */
-    cpu_state[5] = 0;              /* код ошибки */
-    cpu_state[6] = 0;              /* резерв */
-    cpu_state[7] = 0;              /* резерв */
+    cpu_state[0] = 6;              // pc: первая команда начинается с ячейки 6 
+    cpu_state[1] = 0;              // acc 
+    cpu_state[2] = 0;              // ir
+    cpu_state[3] = memory[0];      // вектор прерываний = memory[0] 
+    cpu_state[4] = 0;              // флаг остановки 
+    cpu_state[5] = 0;              // код ошибки
+    cpu_state[6] = 0;              // резерв
+    cpu_state[7] = 0;              // резерв
 
     pc = cpu_state[0];
     acc = cpu_state[1];
 
-    /* --- Основной цикл выполнения --- */
     while (cpu_state[4] == 0) {
-        /* Проверка выхода за границы памяти */
+        // Проверка выхода за границы памяти
         if (pc < 0 || pc >= MEM_SIZE) {
             printf("pc=%d: ОШИБКА: выход за границы памяти\n", pc);
             cpu_state[5] = 2;
@@ -58,14 +51,12 @@ int main(void) {
         ir = memory[pc];
         cpu_state[2] = ir;
 
-        /* Команда 0 — стоп */
         if (ir == 0) {
-            printf("pc=%d: команда 0 (HALT), acc=%d\n", pc, acc);
+            printf("pc=%d: команда 0, acc=%d\n", pc, acc);
             cpu_state[4] = 1;
             break;
         }
 
-        /* Команды с операндом-адресом */
         if (ir == 1 || ir == 2 || ir == 3 || ir == 4 || ir == 5) {
             if (pc + 1 >= MEM_SIZE) {
                 printf("pc=%d: ОШИБКА: операнд за границей памяти\n", pc);
@@ -78,10 +69,9 @@ int main(void) {
             }
             operand = memory[pc + 1];
 
-            if (ir == 1) { /* LOAD */
+            if (ir == 1) { //LOAD
                 if (operand < 0 || operand >= MEM_SIZE) {
-                    printf("pc=%d: команда 1, operand=%d, ОШИБКА: адрес вне памяти\n",
-                           pc, operand);
+                    printf("pc=%d: команда 1 (LOAD), operand=%d, ОШИБКА: адрес вне памяти\n", pc, operand);
                     cpu_state[5] = 2;
                     pc = cpu_state[3];
                     acc = cpu_state[1];
@@ -91,12 +81,11 @@ int main(void) {
                 }
                 acc = memory[operand];
                 pc += 2;
-                printf("pc=%d: команда 1, operand=%d, acc=%d\n", pc - 2, operand, acc);
+                printf("pc=%d: команда 1 (LOAD), operand=%d, acc=%d\n", pc - 2, operand, acc);
             }
-            else if (ir == 2) { /* MUL */
+            else if (ir == 2) { //MUL
                 if (operand < 0 || operand >= MEM_SIZE) {
-                    printf("pc=%d: команда 2, operand=%d, ОШИБКА: адрес вне памяти\n",
-                           pc, operand);
+                    printf("pc=%d: команда 2 (MUL), operand=%d, ОШИБКА: адрес вне памяти\n", pc, operand);
                     cpu_state[5] = 2;
                     pc = cpu_state[3];
                     acc = cpu_state[1];
@@ -106,12 +95,11 @@ int main(void) {
                 }
                 acc = acc * memory[operand];
                 pc += 2;
-                printf("pc=%d: команда 2, operand=%d, acc=%d\n", pc - 2, operand, acc);
+                printf("pc=%d: команда 2 (MUL), operand=%d, acc=%d\n", pc - 2, operand, acc);
             }
-            else if (ir == 3) { /* DIV */
+            else if (ir == 3) { //DIV
                 if (operand < 0 || operand >= MEM_SIZE) {
-                    printf("pc=%d: команда 3, operand=%d, ОШИБКА: адрес вне памяти\n",
-                           pc, operand);
+                    printf("pc=%d: команда 3 (DIV), operand=%d, ОШИБКА: адрес вне памяти\n", pc, operand);
                     cpu_state[5] = 2;
                     pc = cpu_state[3];
                     acc = cpu_state[1];
@@ -120,8 +108,7 @@ int main(void) {
                     break;
                 }
                 if (memory[operand] == 0) {
-                    printf("pc=%d: команда 3, operand=%d, ОШИБКА: деление на 0\n",
-                           pc, operand);
+                    printf("pc=%d: команда 3 (DIV), operand=%d, ОШИБКА: деление на 0\n", pc, operand);
                     cpu_state[5] = 1;
                     pc = cpu_state[3];
                     acc = cpu_state[1];
@@ -131,12 +118,11 @@ int main(void) {
                 }
                 acc = acc / memory[operand];
                 pc += 2;
-                printf("pc=%d: команда 3, operand=%d, acc=%d\n", pc - 2, operand, acc);
+                printf("pc=%d: команда 3 (DIV), operand=%d, acc=%d\n", pc - 2, operand, acc);
             }
-            else if (ir == 4) { /* JUMP */
+            else if (ir == 4) { //JUMP
                 if (operand < 0 || operand >= MEM_SIZE) {
-                    printf("pc=%d: команда 4, operand=%d, ОШИБКА: адрес перехода вне памяти\n",
-                           pc, operand);
+                    printf("pc=%d: команда 4 (JUMP), operand=%d, ОШИБКА: адрес перехода вне памяти\n", pc, operand);
                     cpu_state[5] = 2;
                     pc = cpu_state[3];
                     acc = cpu_state[1];
@@ -147,10 +133,9 @@ int main(void) {
                 printf("pc=%d: команда 4 (JUMP), operand=%d, acc=%d\n", pc, operand, acc);
                 pc = operand;
             }
-            else if (ir == 5) { /* JZ */
+            else if (ir == 5) { //JZ
                 if (operand < 0 || operand >= MEM_SIZE) {
-                    printf("pc=%d: команда 5, operand=%d, ОШИБКА: адрес перехода вне памяти\n",
-                           pc, operand);
+                    printf("pc=%d: команда 5 (JZ), operand=%d, ОШИБКА: адрес перехода вне памяти\n", pc, operand);
                     cpu_state[5] = 2;
                     pc = cpu_state[3];
                     acc = cpu_state[1];
@@ -178,8 +163,6 @@ int main(void) {
             printf("Программа завершена с ошибкой.\n");
             break;
         }
-
-        /* Сохраняем состояние */
         cpu_state[0] = pc;
         cpu_state[1] = acc;
     }
